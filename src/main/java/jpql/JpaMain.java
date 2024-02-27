@@ -19,8 +19,11 @@ public class JpaMain {
 			member.setAge(10);
 			em.persist(member);
 
-			List<Member> result = em.createQuery("select m from Member m", Member.class).getResultList();
+			List<MemberDto> result = em.createQuery("select new jpql.MemberDto(m.username, m.age) from Member m", MemberDto.class).getResultList();
 
+			for (MemberDto memberDto : result) {
+				System.out.println("memberDto = " + memberDto);
+			}
 
 			tx.commit();
 		} catch (Exception e) {
