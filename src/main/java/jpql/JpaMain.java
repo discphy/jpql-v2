@@ -22,11 +22,13 @@ public class JpaMain {
 			member.setUsername("member1");
 			member.setAge(10);
 			member.setTeam(team);
+			member.setType(MemberType.USER);
 
 			em.persist(member);
 
-			String query = "select m from Member m join m.team t";
+			String query = "select m from Member m where m.type = :userType";
 			List<Member> result = em.createQuery(query, Member.class)
+					.setParameter("userType", MemberType.ADMIN)
 					.getResultList();
 
 			tx.commit();
