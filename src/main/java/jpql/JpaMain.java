@@ -24,12 +24,22 @@ public class JpaMain {
 			member.setTeam(team);
 			member.setType(MemberType.USER);
 
-			em.persist(member);
+			Member member2 = new Member();
+			member2.setUsername("member2");
+			member2.setAge(10);
+			member2.setTeam(team);
+			member2.setType(MemberType.USER);
 
-			String query = "select m from Member m where m.type = :userType";
-			List<Member> result = em.createQuery(query, Member.class)
-					.setParameter("userType", MemberType.ADMIN)
+			em.persist(member);
+			em.persist(member2);
+
+			String query = "select function('group_concat', m.username) from Member m";
+			List<String> result = em.createQuery(query, String.class)
 					.getResultList();
+
+			for (String item : result) {
+				System.out.println("item = " + item);
+			}
 
 			tx.commit();
 		} catch (Exception e) {
