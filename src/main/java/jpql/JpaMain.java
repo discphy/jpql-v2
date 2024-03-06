@@ -4,7 +4,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import java.util.List;
 
 public class JpaMain {
 
@@ -47,24 +46,12 @@ public class JpaMain {
 			em.flush();
 			em.clear();
 
-			String query = "select distinct t from Team t join fetch t.members"; // 지연로딩보다 먼저 작동
-			List<Team> result = em.createQuery(query, Team.class)
-					.getResultList();
+			String query = "select m from Member m where m = :member";
+			Member findMember = em.createQuery(query, Member.class)
+					.setParameter("member", member)
+					.getSingleResult();
 
-			for (Team item : result) {
-				System.out.println("member = " + item.getName() + " / " + item.getMembers().size());
-
-				for (Member itemMember : item.getMembers()) {
-					System.out.println("itemMember = " + itemMember);
-
-				}
-
-				// 회원 1, 팀A(SQL)
-				// 회원 2, 팀A(1차캐시)
-				// 회원 3, 팀B(SQL)
-
-				// 회원 100, N + 1
-			}
+			System.out.println("findMember = " + findMember);
 
 			tx.commit();
 		} catch (Exception e) {
